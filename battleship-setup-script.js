@@ -186,6 +186,16 @@ function setEventListeners() {
   gameBoardCells.forEach((cell) => {
     //MouseEnter
     cell.addEventListener("mouseenter", () => {
+      //If we go one step back
+      if (
+        currentShipCells.length > 2 &&
+        cell.row == currentShipCells[currentShipCells.length - 2].row &&
+        cell.col == currentShipCells[currentShipCells.length - 2].col
+      ) {
+        console.log("Error");
+        clearCell(currentShipCells.pop());
+        return;
+      }
       if (mouseDown) {
         if (!checkNearShipPlacement(cell) && !checkDiagonalPlacement(cell)) {
           reserveCell(cell);
