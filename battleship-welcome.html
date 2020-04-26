@@ -9,17 +9,32 @@
 </head>
 
 <body>
-    <div class="game-container" id="background">
-        <div class="form">
-            <form action="">
-                <input type="text" class="inputField" placeholder="Ime prvog igraca..." id="playerName1"> </br>
-                <input type="text" class="inputField" placeholder="Ime drugog igraca.." id="playerName2"> </br>
-                <input type="submit" class="formButton" value="Zapocni igru" onclick="checkNames()">
-            </form>
+    <div class="welcome-container" id="background">
+        <div class="rules">
+            <h3 style="display: inline;">Name -></h3>
+            <p style="display: inline;">Player name may only contain uppercase and lowercase letters, numbers
+                and underscore. Minimum size should be 3 characters,
+                and the maximum size is 15 characters.</p>
+            <h3>How to play:</h3>
+            <p>The gameplay is straightforward. Each player hides ships on a grid containing vertical and
+                horizontal space coordinates. Players take turns calling out row and column coordinates on the other
+                player's grid in an attempt to identify a square that contains a ship. </p>
         </div>
+        <aside>
+            <h1>Battleship</h1>
+            <div class="form">
+                <form action="">
+                    <input type="text" class="input-field " placeholder="First player..." id="playerName1">
+                    <input type="text" class="input-field " placeholder="Second player..." id="playerName2">
+                    <div class="button-container">
+                        <p class="button" onclick="checkNames()">Play</p>
+                    </div>
+                </form>
+            </div>
+        </aside>
     </div>
 </body>
 
-<script src="battleship-welcom-script.js"></script>
+<script src="battleship-welcome-script.js"></script>
 
 </html>

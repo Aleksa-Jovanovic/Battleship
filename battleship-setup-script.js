@@ -17,6 +17,7 @@ function nextPlayer() {
 }
 function startGame() {
   if (totalShipsLeft[1] == 0) {
+    totalShipsLeft = [10, 10];
     window.location.href = "battleship-game.html";
   }
 }
@@ -39,7 +40,7 @@ let mouseDown;
 let numberOfNearReserved = 0;
 let gameBoards = document.querySelectorAll(".game-board");
 let totalShipsLeft = [10, 10];
-let currentShipCells = [];
+let currentShipParts = [];
 let errorInPlacement = 0;
 
 /* Importing cells */
@@ -143,25 +144,23 @@ function reserveCell(cell) {
   //Paint and input
   let board = cell.player == 1 ? board1 : board2;
   board.matrix[cell.row][cell.col] = reservedCellNumber;
-  console.log(board.matrix);
   cell.className = "reserved-cell";
   //Remember cells
-  currentShipCells.push({ row: cell.row, col: cell.col, player: cell.player });
-  console.log(currentShipCells);
+  currentShipParts.push({ row: cell.row, col: cell.col, player: cell.player });
 }
 
 function markErrorCell(cell) {
   let board = cell.player == 1 ? board1 : board2;
   board.matrix[cell.row][cell.col] = errorCellNumber;
   cell.className = "error-cell";
-  currentShipCells.push({ row: cell.row, col: cell.col, player: cell.player });
+  currentShipParts.push({ row: cell.row, col: cell.col, player: cell.player });
   errorInPlacement++;
 }
 
 function takeCells() {
-  decreaseShipNumber(currentShipCells);
-  while (currentShipCells.length != 0) {
-    let shipCell = currentShipCells.shift();
+  decreaseShipNumber(currentShipParts);
+  while (currentShipParts.length != 0) {
+    let shipCell = currentShipParts.shift();
     let board = shipCell.player == 1 ? board1 : board2;
     board.matrix[shipCell.row][shipCell.col] = takenCellNumber;
     let id = shipCell.player * 100 + shipCell.row * 10 + shipCell.col;
@@ -171,7 +170,7 @@ function takeCells() {
 }
 
 function clearCell(shipCell) {
-  //shipCell = currentShipCells.pop();
+  //shipCell = currentShipParts.pop();
   let board = shipCell.player == 1 ? board1 : board2;
   if (board.matrix[shipCell.row][shipCell.col] == errorCellNumber) {
     errorInPlacement--;
@@ -182,15 +181,26 @@ function clearCell(shipCell) {
   cell.className = "cell";
 }
 
-function clearCells() {
-  currentShipCells.forEach((shipCell) => {
+function clearCells(shipParts) {
+  shipParts.forEach((shipCell) => {
     clearCell(shipCell);
   });
-  currentShipCells.length = 0;
+  shipParts.length = 0;
 }
 
 /* Helper functions */
-function removeShip(cell) {}
+function removeShip(shipPart) {
+  let board = shipPart.player == 1 ? board1 : board2;
+  if (board.matrix[shipPart.row][shipPart.col] == takenCellNumber) {
+    let shipParts = findNeighbourParts(
+      { row: shipPart.row, col: shipPart.col, player: shipPart.player },
+      board,
+      []
+    );
+    increaseShipNumber(shipParts);
+    clearCells(shipParts);
+  }
+}
 
 function decreaseShipNumber(shipParts) {
   let shipsBoard1 = ["#boat1", "#small-ship1", "#medium-ship1", "#big-ship1"];
@@ -212,6 +222,73 @@ function increaseShipNumber(shipParts) {
   let currShipNumber = parseInt(ship.innerHTML);
   currShipNumber++;
   ship.innerHTML = currShipNumber;
+
+  totalShipsLeft[shipParts[0].player - 1]++;
+}
+
+function findNeighbourParts(part, board, shipParts) {
+  //Push new cell
+  shipParts.push(part);
+  player = part.player;
+  //Check up
+  row = part.row - 1;
+  col = part.col;
+  if (board.matrix[row][col] == takenCellNumber) {
+    if (notInArray({ row: row, col: col }, shipParts)) {
+      shipParts = findNeighbourParts(
+        { row: row, col: col, player: player },
+        board,
+        shipParts
+      );
+    }
+  }
+  //Check right
+  row = part.row;
+  col = part.col + 1;
+  if (board.matrix[row][col] == takenCellNumber) {
+    if (notInArray({ row: row, col: col }, shipParts)) {
+      shipParts = findNeighbourParts(
+        { row: row, col: col, player: player },
+        board,
+        shipParts
+      );
+    }
+  }
+  //Check down
+  row = part.row + 1;
+  col = part.col;
+  if (board.matrix[row][col] == takenCellNumber) {
+    if (notInArray({ row: row, col: col }, shipParts)) {
+      shipParts = findNeighbourParts(
+        { row: row, col: col, player: player },
+        board,
+        shipParts
+      );
+    }
+  }
+  //Check left
+  row = part.row;
+  col = part.col - 1;
+  if (board.matrix[row][col] == takenCellNumber) {
+    if (notInArray({ row: row, col: col }, shipParts)) {
+      shipParts = findNeighbourParts(
+        { row: row, col: col, player: player },
+        board,
+        shipParts
+      );
+    }
+  }
+
+  return shipParts;
+}
+
+function notInArray(elem, array) {
+  for (let i = 0; i < array.length; i++) {
+    if (elem.col == array[i].col && elem.row == array[i].row) {
+      return false;
+    }
+  }
+  return true;
 }
 
 function shipSizeValid(shipParts) {
@@ -235,8 +312,8 @@ function setEventListeners() {
   /* Window listener */
   window.addEventListener("mouseup", () => {
     mouseDown = false;
-    if (errorInPlacement > 0 || !shipSizeValid(currentShipCells)) {
-      clearCells();
+    if (errorInPlacement > 0 || !shipSizeValid(currentShipParts)) {
+      clearCells(currentShipParts);
     } else {
       takeCells();
     }
@@ -249,12 +326,12 @@ function setEventListeners() {
     cell.addEventListener("mouseenter", () => {
       //If we go one step back
       if (
-        currentShipCells.length > 2 &&
-        cell.row == currentShipCells[currentShipCells.length - 2].row &&
-        cell.col == currentShipCells[currentShipCells.length - 2].col
+        currentShipParts.length > 2 &&
+        cell.row == currentShipParts[currentShipParts.length - 2].row &&
+        cell.col == currentShipParts[currentShipParts.length - 2].col
       ) {
         console.log("Error");
-        clearCell(currentShipCells.pop());
+        clearCell(currentShipParts.pop());
         return;
       }
       if (mouseDown) {
@@ -267,7 +344,6 @@ function setEventListeners() {
         if (!checkNearShipPlacement(cell)) {
           cell.classList.add("hover-cell");
         } else {
-          console.log("WrongCell");
           cell.classList.add("hover-error-cell");
         }
       }
@@ -281,17 +357,22 @@ function setEventListeners() {
 
     //MouseDown
     cell.addEventListener("mousedown", (event) => {
-      if (event.button == 2) {
-        clearCell({ row: cell.row, col: cell.col, player: cell.player });
-        //removeShip();
+      //if (event.button == 2) {
+      //clearCell({ row: cell.row, col: cell.col, player: cell.player });
+      //removeShip(cell);
+      //} else {
+      mouseDown = true;
+      let board = cell.player == 1 ? board1 : board2;
+      if (
+        !checkNearShipPlacement(cell) &&
+        !board.matrix[cell.row][cell.col] == takenCellNumber
+      ) {
+        reserveCell(cell);
       } else {
-        mouseDown = true;
-        if (!checkNearShipPlacement(cell)) {
-          reserveCell(cell);
-        } else {
-          markErrorCell(cell);
-        }
+        //markErrorCell(cell);
+        removeShip(cell);
       }
+      //}
     });
   });
 }
