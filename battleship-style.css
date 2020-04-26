@@ -1,5 +1,13 @@
 @import url("https://fonts.googleapis.com/css?family=Indie+Flower&display=swap");
 
+:root {
+  --sailor-blue: #00203fff;
+  --mint: #adefd1ff;
+  --cherry-tomato: #ed2b33ff;
+  --rapture-rose: #d85a7fff;
+  --lime-punch: #d6ed17ff;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -58,63 +66,117 @@
   left: 50%;
   transform: translate(-50%, 0%);
 }
+/* Setup-Game Screen */
+
+aside {
+  width: 32%;
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+aside h1 {
+  color: var(--sailor-blue);
+  font-size: 3em;
+  font-family: "Indie Flower", cursive;
+  padding-bottom: 2%;
+}
+
+.dock {
+  display: grid;
+  grid-template-columns: 1fr 0.2fr;
+  align-items: center;
+  justify-content: space-evenly;
+  padding-left: 5%;
+  background: var(--sailor-blue);
+  color: var(--mint);
+  font-family: "Indie Flower", cursive;
+  font-size: 2em;
+  font-weight: bold;
+  border-radius: 7px;
+}
+
+.button-container {
+  padding-top: 5%;
+}
+
+.button {
+  display: inline-block;
+  width: 33%;
+  margin-left: 50%;
+  transform: translate(-50%, 0%);
+  background: var(--sailor-blue);
+  color: var(--mint);
+  font-family: "Indie Flower", cursive;
+  padding: 0.4rem 1.3rem;
+  font-size: 1.5rem;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.45);
+  border-radius: 2px;
+}
 
 /* Board */
 .not-showing {
   display: none !important;
 }
+
 .game-board {
   width: 700px;
   height: 700px;
   display: grid;
   grid-template-columns: repeat(11, 1fr);
-  grid-gap: 1%;
+  grid-gap: 0.7%;
 }
 .cell {
-  background: white;
-  width: 100%;
-  height: 100%;
-}
-
-.hover-cell {
   background: lightblue;
   width: 100%;
   height: 100%;
 }
 
+.hover-cell {
+  background: var(--lime-punch);
+  width: 100%;
+  height: 100%;
+}
+
 .reserved-cell {
-  background: lightgrey;
+  background: var(--lime-punch);
   width: 100%;
   height: 100%;
 }
 
 .taken-cell {
-  background: grey;
+  background: #606060ff;
   width: 100%;
   height: 100%;
 }
 
 .error-cell {
-  background: red;
+  background: var(--cherry-tomato);
   width: 100%;
   height: 100%;
 }
 
 .hover-error-cell {
-  background: #ff8784;
+  background: var(--rapture-rose);
   width: 100%;
   height: 100%;
 }
 
 .board-header {
   /*border: solid 2px black;*/
-  background: white;
+  user-select: none;
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: flex-end;
   background: rgba(0, 0, 0, 0);
+  color: var(--sailor-blue);
   font-weight: bold;
   font-family: "Indie Flower", cursive;
   font-size: 2em;

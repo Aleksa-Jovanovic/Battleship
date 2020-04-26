@@ -4,6 +4,23 @@ const reservedCellNumber = 2;
 const takenCellNumber = 1;
 const emptyCellNumber = 0;
 
+/* HTML calls this */
+function nextPlayer() {
+  if (totalShipsLeft[0] == 0) {
+    document
+      .querySelector(".setup-container.player1")
+      .classList.add("not-showing");
+    document
+      .querySelector(".setup-container.player2")
+      .classList.remove("not-showing");
+  }
+}
+function startGame() {
+  if (totalShipsLeft[1] == 0) {
+    window.location.href = "battleship-game.html";
+  }
+}
+
 class Board {
   constructor() {
     this.matrix = new Array(10);
@@ -21,6 +38,7 @@ const board2 = new Board();
 let mouseDown;
 let numberOfNearReserved = 0;
 let gameBoards = document.querySelectorAll(".game-board");
+let totalShipsLeft = [10, 10];
 let currentShipCells = [];
 let errorInPlacement = 0;
 
@@ -52,7 +70,7 @@ function createBoard() {
   });
 }
 
-/* Drawing functions */
+/* Functions for checking rules */
 function checkNearShipPlacement(cell) {
   let row = cell.row;
   let col = cell.col;
@@ -141,6 +159,7 @@ function markErrorCell(cell) {
 }
 
 function takeCells() {
+  decreaseShipNumber(currentShipCells);
   while (currentShipCells.length != 0) {
     let shipCell = currentShipCells.shift();
     let board = shipCell.player == 1 ? board1 : board2;
@@ -170,11 +189,53 @@ function clearCells() {
   currentShipCells.length = 0;
 }
 
+/* Helper functions */
+function removeShip(cell) {}
+
+function decreaseShipNumber(shipParts) {
+  let shipsBoard1 = ["#boat1", "#small-ship1", "#medium-ship1", "#big-ship1"];
+  let shipsBoard2 = ["#boat2", "#small-ship2", "#medium-ship2", "#big-ship2"];
+  let shipsBoard = shipParts[0].player == 1 ? shipsBoard1 : shipsBoard2;
+  let ship = document.querySelector(`${shipsBoard[shipParts.length - 1]}`);
+  let currShipNumber = parseInt(ship.innerHTML);
+  currShipNumber--;
+  ship.innerHTML = currShipNumber;
+
+  totalShipsLeft[shipParts[0].player - 1]--;
+}
+
+function increaseShipNumber(shipParts) {
+  let shipsBoard1 = ["#boat1", "#small-ship1", "#medium-ship1", "#big-ship1"];
+  let shipsBoard2 = ["#boat2", "#small-ship2", "#medium-ship2", "#big-ship2"];
+  let shipsBoard = shipParts[0].player == 1 ? shipsBoard1 : shipsBoard2;
+  let ship = document.querySelector(`${shipsBoard[shipParts.length - 1]}`);
+  let currShipNumber = parseInt(ship.innerHTML);
+  currShipNumber++;
+  ship.innerHTML = currShipNumber;
+}
+
+function shipSizeValid(shipParts) {
+  if (shipParts.length > 4 || shipParts.length == 0) {
+    return false;
+  }
+  let shipsBoard1 = ["#boat1", "#small-ship1", "#medium-ship1", "#big-ship1"];
+  let shipsBoard2 = ["#boat2", "#small-ship2", "#medium-ship2", "#big-ship2"];
+  let shipsBoard = shipParts[0].player == 1 ? shipsBoard1 : shipsBoard2;
+  let ship = document.querySelector(`${shipsBoard[shipParts.length - 1]}`);
+  let currShipNumber = parseInt(ship.innerHTML);
+  if (currShipNumber > 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+/* Event listener */
 function setEventListeners() {
   /* Window listener */
   window.addEventListener("mouseup", () => {
     mouseDown = false;
-    if (errorInPlacement > 0) {
+    if (errorInPlacement > 0 || !shipSizeValid(currentShipCells)) {
       clearCells();
     } else {
       takeCells();
@@ -222,7 +283,7 @@ function setEventListeners() {
     cell.addEventListener("mousedown", (event) => {
       if (event.button == 2) {
         clearCell({ row: cell.row, col: cell.col, player: cell.player });
-        //deleteShip();
+        //removeShip();
       } else {
         mouseDown = true;
         if (!checkNearShipPlacement(cell)) {

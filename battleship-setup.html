@@ -10,9 +10,46 @@
 
 <body>
 
-    <div class="setup-container" id="background">
-        <div class="game-board"></div>
-        <div style="background-color: green; width: 700px; height:700px;"></div>
+    <!--First Player-->
+    <div class="setup-container player1" id="background">
+        <div class="game-board player1"></div>
+        <aside class="player1">
+            <h1>Ships ready for battle:</h1>
+            <div class="dock">
+                <p>Big ship (4 cells)</p>
+                <p class="ship-quantity" id="big-ship1">1</p>
+                <p>Medium ship (3 cells)</p>
+                <p class="ship-quantity" id="medium-ship1">2</p>
+                <p>Small ship (2 cells)</p>
+                <p class="ship-quantity" id="small-ship1">3</p>
+                <p>Boat (1 cell)</p>
+                <p class="ship-quantity" id="boat1">4</p>
+            </div>
+            <div class="button-container">
+                <p class="button" onclick="nextPlayer()">Next Player</p>
+            </div>
+        </aside>
+    </div>
+
+    <!--Second Player-->
+    <div class="setup-container player2 not-showing" id="background">
+        <div class="game-board player2"></div>
+        <aside class="player2">
+            <h1>Ships ready for battle:</h1>
+            <div class="dock">
+                <p>Big ship (4 cells)</p>
+                <p class="ship-quantity" id="big-ship2">1</p>
+                <p>Medium ship (3 cells)</p>
+                <p class="ship-quantity" id="medium-ship2">2</p>
+                <p>Small ship (2 cells)</p>
+                <p class="ship-quantity" id="small-ship2">3</p>
+                <p>Boat (1 cell)</p>
+                <p class="ship-quantity" id="boat2">4</p>
+            </div>
+            <div class="button-container">
+                <p class="button" onclick="startGame()">Start Game</p>
+            </div>
+        </aside>
     </div>
 
 
