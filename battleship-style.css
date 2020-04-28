@@ -6,6 +6,10 @@
   --cherry-tomato: #ed2b33ff;
   --rapture-rose: #d85a7fff;
   --lime-punch: #d6ed17ff;
+  --gray: #606060ff;
+  --black: #101820ff;
+  --turkish-sea: #195190ff;
+  --silver: #a2a2a1ff;
 }
 
 * {
@@ -181,7 +185,7 @@ aside h1 {
 }
 
 .taken-cell {
-  background: #606060ff;
+  background: var(--gray);
   width: 100%;
   height: 100%;
 }
@@ -192,15 +196,26 @@ aside h1 {
   height: 100%;
 }
 
-.hover-error-cell,
-.damaged-cell {
+.hover-error-cell {
   background: var(--rapture-rose);
   width: 100%;
   height: 100%;
 }
 
+.damaged-cell {
+  background: var(--silver);
+  width: 100%;
+  height: 100%;
+}
+
+.hit-water-cell {
+  background: var(--turkish-sea);
+  width: 100%;
+  height: 100%;
+}
+
 .destroyed-cell {
-  background: black;
+  background: var(--black);
   width: 100%;
   height: 100%;
 }
