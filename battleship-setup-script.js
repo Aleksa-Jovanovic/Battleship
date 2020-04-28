@@ -17,7 +17,7 @@ function nextPlayer() {
 }
 function startGame() {
   if (totalShipsLeft[1] == 0) {
-    totalShipsLeft = [10, 10];
+    updateBoardCondition();
     window.location.href = "battleship-game.html";
   }
 }
@@ -189,6 +189,13 @@ function clearCells(shipParts) {
 }
 
 /* Helper functions */
+function updateBoardCondition() {
+  let firstPlayerBoard = JSON.stringify(board1);
+  let secondPlayerBoard = JSON.stringify(board2);
+  localStorage.setItem("firstPlayerBoard", firstPlayerBoard);
+  localStorage.setItem("secondPlayerBoard", secondPlayerBoard);
+}
+
 function removeShip(shipPart) {
   let board = shipPart.player == 1 ? board1 : board2;
   if (board.matrix[shipPart.row][shipPart.col] == takenCellNumber) {
@@ -330,7 +337,6 @@ function setEventListeners() {
         cell.row == currentShipParts[currentShipParts.length - 2].row &&
         cell.col == currentShipParts[currentShipParts.length - 2].col
       ) {
-        console.log("Error");
         clearCell(currentShipParts.pop());
         return;
       }
@@ -378,5 +384,3 @@ function setEventListeners() {
 }
 
 /* First create boards then add eventListeners */
-createBoard();
-setEventListeners();

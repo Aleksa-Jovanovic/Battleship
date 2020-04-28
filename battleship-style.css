@@ -37,7 +37,7 @@
 }
 
 #background {
-  background-image: url(img/seaBackground.jpg);
+  background-image: url(battleship-assets/seaBackground.jpg);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -192,8 +192,15 @@ aside h1 {
   height: 100%;
 }
 
-.hover-error-cell {
+.hover-error-cell,
+.damaged-cell {
   background: var(--rapture-rose);
+  width: 100%;
+  height: 100%;
+}
+
+.destroyed-cell {
+  background: black;
   width: 100%;
   height: 100%;
 }
@@ -211,4 +218,47 @@ aside h1 {
   font-weight: bold;
   font-family: "Indie Flower", cursive;
   font-size: 2em;
+  font-weight: bold;
+}
+
+/* Game Screen */
+
+.player-field-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.player-container {
+  width: 80%;
+  margin-bottom: 5%;
+  background: var(--sailor-blue);
+  transform: translate(5%, 0%);
+  border: solid var(--mint) 2px;
+  border-radius: 5px;
+}
+
+.player-state {
+  height: 100%;
+  width: 13%;
+  display: inline-block;
+  padding-top: 3px;
+  border: solid 2px var(--mint);
+  font-family: "Indie Flower", cursive;
+  font-size: 3.5rem;
+  text-align: center;
+  color: var(--sailor-blue);
+  background: var(--mint);
+  user-select: none;
+}
+
+.player-name {
+  width: 86%;
+  display: inline-block;
+  text-align: center;
+  font-family: "Indie Flower", cursive;
+  font-size: 3.5rem;
+  color: var(--mint);
+  user-select: none;
 }
